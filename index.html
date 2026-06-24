@@ -904,15 +904,24 @@ function showResult() {
   progressFill.style.width = '100%';
 
   const output = {
-    timestamp: new Date().toISOString(),
     answers: answers.map(a => ({
       title: a.title,
       type: a.type,
       value: a.value
     }))
   };
+
   resultJson.textContent = JSON.stringify(output, null, 2);
-  console.log('问卷数据：', output);
+
+  const SERVER = 'http://192.168.1.6:3000/submit';
+
+  fetch(SERVER, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(output)
+  })
+  .then(() => console.log('✅ 已保存到本地'))
+  .catch(() => console.log('❌ 保存失败（确认接收端开着吗？）'));
 }
 
 // ============================================================
